@@ -37,7 +37,7 @@ const whereAmI = function () {
     })
     .then(response => {
       if (!response.ok)
-        throw new Error('Your are reloading tab too fast.' + response.status);
+        throw new Error(`Your are reloading tab too fast ${response.status}`);
 
       return response.json();
     })
@@ -48,7 +48,7 @@ const whereAmI = function () {
       return fetch(`https://restcountries.com/v2/name/${data.country}`);
     })
     .then(response => {
-      if (!response.ok) throw new Error('Country not found');
+      if (!response.ok) throw new Error(`Country not found ${response.status}`);
 
       return response.json();
     })
@@ -62,10 +62,12 @@ const whereAmI = function () {
       // Country 2
       return fetch(`https://restcountries.com/v2/alpha/${borderCountry}`);
     })
-    .then(response => response.json())
-    .then(data => {
-      renderCountry(data, 'neighbour');
+    .then(response => {
+      if (!response.ok) throw new Error(`Country not found ${response.status}`);
+
+      return response.json();
     })
+    .then(data => renderCountry(data, 'neighbour'))
     .catch(err => {
       alert(err.message);
       console.error(err.message);
